@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+:root {
+  --rust: #D55D27;
+  --yellow: #FFFE00;
+  --ink: #1C1B1A;
+  --olive: #45471D;
+  --sand: #D1B788;
+  --cream: #FFFBF5;
+
+  --background: var(--cream);
+  --foreground: var(--ink);
+}
+
+@theme inline {
+  --color-rust: var(--rust);
+  --color-yellow: var(--yellow);
+  --color-ink: var(--ink);
+  --color-olive: var(--olive);
+  --color-sand: var(--sand);
+  --color-cream: var(--cream);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-display: "Fraunces", serif;
+  --font-sans: "Poppins", sans-serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Poppins", sans-serif;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: var(--yellow);
+  color: var(--ink);
+}
+
+/* visible keyboard focus, accessible by default */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--rust);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* postcard texture for the stamp-style status badge */
+.stamp {
+  border: 1.5px dashed currentColor;
+  border-radius: 2px;
+}
+
+.paper-line {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 31px,
+    rgba(28, 27, 26, 0.06) 32px
+  );
+}
