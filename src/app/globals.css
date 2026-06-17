@@ -1,5 +1,63 @@
 @import "tailwindcss";
+html {
+  scroll-behavior: smooth;
+}
 
+html,
+body {
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Poppins", sans-serif;
+
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.animate-scroll {
+  animation: scroll 30s linear infinite;
+}
+
+.animate-scroll:hover {
+  animation-play-state: paused;
+}
+
+.carousel-mask {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 10%,
+    black 90%,
+    transparent
+  );
+
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 10%,
+    black 90%,
+    transparent
+  );
+}
+
+.section-padding {
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+}
+
+.hero-glow {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 9999px;
+  background: rgba(213, 93, 39, 0.15);
+  filter: blur(120px);
+  pointer-events: none;
+}
 :root {
   --rust: #D55D27;
   --yellow: #FFFE00;
@@ -64,6 +122,19 @@ select:focus-visible {
   border-radius: 2px;
 }
 
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 30s linear infinite;
+}
 .paper-line {
   background-image: repeating-linear-gradient(
     to bottom,
@@ -71,4 +142,638 @@ select:focus-visible {
     transparent 31px,
     rgba(28, 27, 26, 0.06) 32px
   );
+}
+/* =========================
+   SMOOTH SCROLL
+========================= */
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  overflow-x: hidden;
+}
+
+/* =========================
+   TEXT RENDERING
+========================= */
+
+body {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* =========================
+   HERO VIDEO
+========================= */
+
+.hero-overlay {
+  background: linear-gradient(
+    rgba(0, 0, 0, 0.45),
+    rgba(0, 0, 0, 0.55)
+  );
+}
+
+/* =========================
+   FLOAT ANIMATION
+========================= */
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* =========================
+   REVIEW CARD FLOAT
+========================= */
+
+.review-card {
+  transition: all 0.4s ease;
+}
+
+.review-card:hover {
+  transform: translateY(-10px);
+}
+
+/* =========================
+   TRAVEL CARD
+========================= */
+
+.travel-card {
+  transition: all 0.4s ease;
+}
+
+.travel-card:hover {
+  transform: translateY(-12px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+}
+
+/* =========================
+   IMAGE HOVER
+========================= */
+
+.image-zoom {
+  overflow: hidden;
+}
+
+.image-zoom img {
+  transition: transform 0.8s ease;
+}
+
+.image-zoom:hover img {
+  transform: scale(1.08);
+}
+
+/* =========================
+   GLASS EFFECT
+========================= */
+
+.glass {
+  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* =========================
+   MARQUEE
+========================= */
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* =========================
+   SECTION TITLE
+========================= */
+
+.section-title {
+  font-family: "Fraunces", serif;
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* =========================
+   CTA GLOW
+========================= */
+
+.cta-glow {
+  position: relative;
+}
+
+.cta-glow::before {
+  content: "";
+  position: absolute;
+
+  width: 300px;
+  height: 300px;
+
+  border-radius: 9999px;
+
+  background: rgba(255, 254, 0, 0.15);
+
+  filter: blur(120px);
+
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+}
+
+/* =========================
+   MASONRY IMAGES
+========================= */
+
+.masonry-image {
+  transition: all 0.5s ease;
+}
+
+.masonry-image:hover {
+  transform: translateY(-5px) scale(1.02);
+}
+
+/* =========================
+   HERO STATS
+========================= */
+
+.stat-card {
+  backdrop-filter: blur(12px);
+
+  background: rgba(255, 255, 255, 0.1);
+
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  border-radius: 20px;
+}
+
+/* =========================
+   MOBILE IMPROVEMENTS
+========================= */
+
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 2.5rem;
+  }
+
+  .travel-card:hover,
+  .review-card:hover {
+    transform: none;
+  }
+}
+/* ===========================
+   LESSER KNOWN WONDERS
+=========================== */
+
+.wonder-bg-title {
+  position: absolute;
+  top: 0;
+
+  left: 50%;
+  transform: translateX(-50%);
+
+  font-size: clamp(70px, 12vw, 170px);
+
+  font-weight: 900;
+
+  color: rgba(0, 0, 0, 0.06);
+
+  white-space: nowrap;
+
+  pointer-events: none;
+
+  user-select: none;
+}
+
+.wonder-card {
+  position: relative;
+
+  overflow: hidden;
+
+  border-radius: 40px;
+
+  height: 600px;
+
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.12);
+}
+
+.wonder-image {
+  width: 100%;
+
+  height: 100%;
+
+  object-fit: cover;
+
+  transition: transform 0.8s ease;
+}
+
+.wonder-card:hover .wonder-image {
+  transform: scale(1.05);
+}
+
+.wonder-overlay {
+  position: absolute;
+
+  inset: 0;
+
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8),
+    rgba(0, 0, 0, 0.15),
+    transparent
+  );
+}
+
+.wonder-content {
+  position: absolute;
+
+  bottom: 40px;
+
+  left: 40px;
+
+  right: 40px;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: flex-end;
+
+  color: white;
+}
+
+.wonder-title {
+  font-size: 3rem;
+
+  line-height: 1;
+
+  font-weight: 900;
+
+  color: var(--rust);
+}
+
+.wonder-desc {
+  margin-top: 10px;
+
+  color: rgba(255, 255, 255, 0.9);
+
+  font-size: 1.05rem;
+}
+
+.wonder-location {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  font-size: 1rem;
+
+  font-weight: 600;
+}
+
+.wonder-btn {
+  background: var(--rust);
+
+  color: white;
+
+  padding: 14px 36px;
+
+  border-radius: 999px;
+
+  font-weight: 600;
+
+  transition: all 0.3s ease;
+}
+
+.wonder-btn:hover {
+  transform: translateY(-3px);
+
+  box-shadow: 0 15px 30px rgba(213, 93, 39, 0.25);
+}
+
+/* Swiper */
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: var(--rust) !important;
+}
+
+.swiper-button-next:after,
+.swiper-button-prev:after {
+  font-size: 26px !important;
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .wonder-card {
+  height: 650px;
+  width: 100%;
+}
+
+  .wonder-content {
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+  }
+
+  .wonder-title {
+    font-size: 2rem;
+  }
+
+  .wonder-desc {
+    font-size: 0.9rem;
+  }
+
+  .wonder-location {
+    display: none;
+  }
+}
+
+/* ===========================
+   UNFILTERED FRAMES
+=========================== */
+
+.frames-scroll-left {
+  display: flex;
+  gap: 24px;
+  width: max-content;
+
+  animation: framesLeft 35s linear infinite;
+}
+
+.frames-scroll-right {
+  display: flex;
+  gap: 24px;
+  width: max-content;
+
+  animation: framesRight 35s linear infinite;
+}
+
+@keyframes framesLeft {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes framesRight {
+  from {
+    transform: translateX(-50%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+.frame-card {
+  overflow: hidden;
+
+  border-radius: 28px;
+
+  width: 320px;
+  height: 420px;
+
+  flex-shrink: 0;
+
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+
+  transition: all 0.5s ease;
+}
+
+.frame-card:hover {
+  transform: translateY(-10px);
+}
+
+.frame-image {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  transition: transform 0.8s ease;
+}
+
+.frame-card:hover .frame-image {
+  transform: scale(1.08);
+}
+
+.frames-scroll-left:hover,
+.frames-scroll-right:hover {
+  animation-play-state: paused;
+}
+
+@media (max-width: 768px) {
+  .frame-card {
+    width: 220px;
+    height: 300px;
+  }
+}
+.frame-card:nth-child(odd) {
+  height: 380px;
+}
+
+.frame-card:nth-child(even) {
+  height: 480px;
+}
+.review-card {
+  transition: all 0.4s ease;
+}
+
+.review-card:hover {
+  transform: translateY(-10px);
+}
+
+.swiper-wrapper {
+  align-items: stretch;
+}
+/* ==================================
+   TESTIMONIAL WALL
+================================== */
+
+.reviews-wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 25px;
+
+  height: 900px;
+
+  overflow: hidden;
+
+  max-width: 1600px;
+  margin: auto;
+
+  padding-inline: 20px;
+}
+
+.reviews-column {
+  display: flex;
+  flex-direction: column;
+
+  gap: 25px;
+}
+
+.reviews-up {
+  animation: testimonialsUp 35s linear infinite;
+}
+
+.reviews-down {
+  animation: testimonialsDown 35s linear infinite;
+}
+
+@keyframes testimonialsUp {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes testimonialsDown {
+  from {
+    transform: translateY(-50%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+.reviews-wrapper:hover .reviews-up,
+.reviews-wrapper:hover .reviews-down {
+  animation-play-state: paused;
+}
+
+/* ====================== */
+
+.review-card {
+  background: white;
+
+  border-radius: 28px;
+
+  padding: 30px;
+
+  border: 1px solid rgba(213, 93, 39, 0.15);
+
+  transition: all 0.4s ease;
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.04);
+}
+
+.review-card:hover {
+  transform: translateY(-10px);
+
+  border-color: var(--rust);
+
+  box-shadow:
+    0 20px 40px rgba(213, 93, 39, 0.12);
+}
+
+.review-avatar {
+  width: 70px;
+  height: 70px;
+
+  border-radius: 999px;
+
+  object-fit: cover;
+
+  border: 3px solid white;
+
+  box-shadow:
+    0 8px 20px rgba(0,0,0,0.15);
+
+  transition: 0.4s ease;
+}
+
+.review-card:hover .review-avatar {
+  transform: scale(1.08);
+}
+
+.review-text {
+  color: #444;
+
+  line-height: 1.8;
+
+  font-style: italic;
+}
+
+/* Mobile */
+
+@media (max-width: 1024px) {
+  .reviews-wrapper {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .reviews-wrapper {
+    grid-template-columns: 1fr;
+
+    height: auto;
+  }
+
+  .reviews-up,
+  .reviews-down {
+    animation: none;
+  }
+}
+.footer-social {
+  width: 50px;
+  height: 50px;
+
+  border-radius: 9999px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--rust);
+
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+}
+
+.footer-social:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(213, 93, 39, 0.3);
+}
+
+html {
+  scroll-behavior: smooth;
 }
