@@ -1,71 +1,398 @@
-# Nomichi Trip Desk
+# Nomichi Admin CRM & Trip Management System
 
-A trip enquiry and lead management tool for Nomichi, built for the engineering
-intern assignment. This README is updated as the build progresses; it
-currently reflects the **UI-first pass** — all three surfaces (public site,
-team admin, trips CMS) are built and navigable end to end on mock data.
-Supabase, auth, and the real AI call come next.
+A custom-built admin dashboard for **Nomichi**, designed to manage trips, leads, enquiries, ownership assignment, pipeline tracking, and traveller communication.
 
-## What's built so far
+---
 
-**Public site**
-- Homepage with hero and a grid of open trips, closed trips shown separately and dimmed
-- Trip detail page with full description, dates, price (incl. GST), seat availability
-- Enquiry form with inline validation, loading state, success state, and a simulated error state
-- Trip-not-found page for bad or expired links
+# Features
 
-**Team admin** (not yet behind real auth — see Decisions)
-- Login screen (currently accepts any `@thenomichi.com` email)
-- Dashboard: total leads, leads by pipeline stage, leads per trip, team load
-- Lead list with search (name, phone, email) and filters (status, trip, owner)
-- Lead detail page: pipeline stepper, owner assignment, call log with add-note form, AI WhatsApp message generator
-- Trips CMS: list, create, edit, with open/closed status controlling public visibility
+## Dashboard
 
-**AI feature**
-- Chose Option 1: first WhatsApp message generator, since it's the most directly useful
-  thing a Nomichi associate would do right after a lead comes in
-- Runs through `/api/ai/whatsapp-message`, a server-side route. Right now it returns a
-  templated message so the UI is fully testable; swapping in a real Anthropic call is a
-  contained change to one file and won't touch the frontend
-- No API key will ever ship to the client — enforced by the route living server-side and
-  reading from `process.env` only
+Provides a complete overview of business operations.
 
-## Decisions made (and why)
+### Metrics
 
-- **Mock data first.** `src/lib/mock-data.ts` mirrors the exact shape of the planned
-  Postgres tables (`trips`, `leads`, `call_logs`). Swapping it for real Supabase queries
-  later should mean changing imports, not rewriting components.
-- **Owner is a flat list, not full multi-user auth.** Three seeded team members
-  (`src/lib/mock-data.ts`) stand in for `auth.users`. Given the 7-day window, modeling
-  "owner" as a simple assignable field was a better use of time than building out
-  role-based team accounts. This is the first thing to revisit if there's time left over.
-- **Stamp-style status badges** (dashed border) as the one deliberate visual signature,
-  tying into the "slow travel, send a postcard" feel without leaning on generic
-  rounded pill badges everywhere.
-- **Self-hosted fonts via `@fontsource`** instead of `next/font/google`. Functionally
-  identical output, but doesn't depend on reaching Google's font CDN at build time,
-  which matters in network-restricted environments and avoids a class of build flakiness.
-- **Not a fit** sits outside the main pipeline line, not at the end of it, since it's a
-  branch outcome rather than a stage everyone passes through.
+* Total Leads
+* New Leads
+* Confirmed Leads
+* Open Trips
+* Leads per Trip
+* Team Workload
+* Pipeline Statistics
 
-## Still to do
+---
 
-- Wire Supabase: schema, RLS policies, real auth, replacing every mock-data import
-- Replace the templated AI route with a real Anthropic API call
-- CSV export, activity timeline (stretch)
-- Seed script for 3-4 trips + leads in the real database
-- Vercel deployment
+## Lead Management
 
-## Stack
+Manage traveller enquiries from a single dashboard.
 
-Next.js (App Router) · TypeScript · Tailwind CSS v4 · Supabase (Postgres + Auth, pending) · Vercel (pending)
+### Lead Information
 
-## Running locally
+* Name
+* Phone Number
+* Email
+* Group Type
+* Preferred Month
+* Trip Feeling / Vibe
+* Trip Interested In
+* Lead Source
+* Created Date
+
+### Lead Actions
+
+* View Lead Details
+* Assign Lead Owner
+* Update Pipeline Stage
+* Add Notes
+* View Notes History
+* Generate WhatsApp Message
+* Call Lead
+* Send Email
+* Open WhatsApp Chat
+
+---
+
+## Lead Pipeline
+
+Available stages:
+
+* NEW
+* CONTACTED
+* QUALIFIED
+* VIBE_CHECK_SENT
+* CONFIRMED
+* NOT_A_FIT
+
+Pipeline updates are stored in the database.
+
+---
+
+## Owner Assignment
+
+Leads can be assigned only to Admin users.
+
+Supports:
+
+* Unassigned
+* Admin Assignment
+* Owner Reassignment
+
+---
+
+## Notes System
+
+Store communication history.
+
+Each note contains:
+
+* Note
+* Next Action
+* Lead
+* Author
+* Created Date
+
+Used for:
+
+* Call Notes
+* Follow-ups
+* Team Handover
+* Lead History
+
+---
+
+## WhatsApp Generator
+
+AI-powered first message generation.
+
+Generates personalized outreach using:
+
+* Lead Name
+* Group Type
+* Preferred Month
+* Trip Information
+* Traveller Preferences
+
+---
+
+## Trip Management
+
+Full trip management dashboard.
+
+### Create Trip
+
+Fields:
+
+* Name
+* Destination
+* Journey Type
+* Duration
+* Image
+* Start Date
+* End Date
+* Price
+* Total Seats
+* Description
+* Status
+
+### Edit Trip
+
+Update all trip details.
+
+### Trip Status
+
+* OPEN
+* CLOSED
+
+---
+
+## Authentication
+
+Protected Admin Dashboard.
+
+Supports:
+
+* Admin Login
+* JWT Authentication
+* Protected Routes
+* Session Validation
+
+---
+
+# Database
+
+Built using PostgreSQL + Prisma ORM.
+
+## Tables
+
+### User
+
+Stores admin users.
+
+Fields:
+
+* id
+* name
+* email
+* password
+* role
+
+---
+
+### Trip
+
+Stores all trips.
+
+Fields:
+
+* id
+* name
+* destination
+* journeyType
+* duration
+* image
+* startDate
+* endDate
+* priceGST
+* totalSeats
+* bookedSeats
+* status
+* description
+
+---
+
+### Lead
+
+Stores traveller enquiries.
+
+Fields:
+
+* id
+* name
+* phone
+* email
+* groupType
+* preferredMonth
+* tripFeeling
+* status
+* tripId
+* ownerId
+* createdAt
+
+---
+
+### Note
+
+Stores lead notes.
+
+Fields:
+
+* id
+* note
+* nextAction
+* leadId
+* userId
+* createdAt
+
+---
+
+# Tech Stack
+
+## Frontend
+
+* Next.js 15
+* React 19
+* TypeScript
+* Tailwind CSS
+* Lucide React
+
+---
+
+## Backend
+
+* Next.js Route Handlers
+* Prisma ORM
+* PostgreSQL
+
+---
+
+## Authentication
+
+* JWT
+* Cookies
+* Middleware Protection
+
+---
+
+## Deployment
+
+Recommended:
+
+* Vercel
+* Neon PostgreSQL
+
+---
+
+# Project Structure
+
+src/
+
+├── app/
+
+│ ├── admin/
+
+│ ├── api/
+
+│ ├── login/
+
+│
+
+├── components/
+
+│ ├── lead-detail-client.tsx
+
+│ ├── leads-list-client.tsx
+
+│ ├── trip-form.tsx
+
+│ ├── whatsapp-generator.tsx
+
+│
+
+├── lib/
+
+│ ├── prisma.ts
+
+│ ├── auth.ts
+
+│
+
+├── prisma/
+
+│ ├── schema.prisma
+
+│
+
+└── types/
+
+---
+
+# Admin Credentials
+
+Update these values according to your setup.
+
+Email:
+
+[admin@nomichi.com](mailto:admin@nomichi.com)
+
+Password:
+
+---
+
+(Stored securely in database)
+
+---
+
+# Environment Variables
+
+Create a .env file.
+
+DATABASE_URL=
+
+JWT_SECRET=
+
+NEXT_PUBLIC_APP_URL=
+
+---
+
+# Installation
+
+Clone Repository
+
+```bash
+git clone <repo-url>
+```
+
+Install Dependencies
 
 ```bash
 npm install
+```
+
+Generate Prisma Client
+
+```bash
+npx prisma generate
+```
+
+Run Migration
+
+```bash
+npx prisma migrate dev
+```
+
+Start Development Server
+
+```bash
 npm run dev
 ```
 
-No environment variables are required yet since the app runs entirely on mock data.
-Once Supabase is wired up, copy `.env.example` to `.env.local` and fill in real values.
+---
+
+# Future Improvements
+
+* AI Lead Scoring
+* Email Automation
+* WhatsApp Automation
+* Trip Seat Tracking
+* Payment Integration
+* CRM Analytics
+* Lead Activity Timeline
+* Admin Roles & Permissions
+* Notification Center
+* Reporting Dashboard
+
+---
+
+Built for Nomichi
+
+Wander. Connect. Belong.
