@@ -741,10 +741,15 @@ body {
 }
 
 @media (max-width: 768px) {
-  .reviews-wrapper {
-    grid-template-columns: 1fr;
 
+  .reviews-wrapper {
+    display: block;
     height: auto;
+  }
+.reviews-wrapper .reviews-column:nth-child(1),
+  .reviews-wrapper .reviews-column:nth-child(2),
+  .reviews-wrapper .reviews-column:nth-child(3) {
+    display: none;
   }
 
   .reviews-up,

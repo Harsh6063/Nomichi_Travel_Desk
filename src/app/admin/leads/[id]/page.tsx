@@ -1,6 +1,6 @@
-import { LEADS, CALL_LOGS } from "@/lib/mock-data";
-import { LeadDetailClient } from "@/components/lead-detail-client";
+import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
+import { LeadDetailClient } from "@/components/lead-detail-client";
 
 export default async function LeadDetailPage({
   params,
@@ -8,11 +8,38 @@ export default async function LeadDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const lead = LEADS.find((l) => l.id === id);
 
-  if (!lead) notFound();
+  const lead = await prisma.lead.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      trip: true,
+      owner: true,
+      notes: true,
+    },
+  });
 
-  const logs = CALL_LOGS.filter((log) => log.lead_id === lead.id);
+  if (!lead) {
+    notFound();
+  }
 
-  return <LeadDetailClient lead={lead} initialLogs={logs} />;
+  const admins = await prisma.user.findMany({
+    where: {
+      role: "ADMIN",
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+    },
+  });
+
+  return (
+    <LeadDetailClient
+      lead={lead}
+      initialLogs={lead.notes}
+      admins={admins}
+    />
+  );
 }

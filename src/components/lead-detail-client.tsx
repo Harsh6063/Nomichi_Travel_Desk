@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import type { Lead, LeadStatus, CallLog } from "@/types";
 import { GROUP_TYPE_LABELS } from "@/types";
-import { TEAM_MEMBERS, TRIPS } from "@/lib/mock-data";
 import { LeadStatusBadge } from "@/components/lead-status-badge";
 import { PipelineStepper } from "@/components/pipeline-stepper";
 import { CallLogSection } from "@/components/call-log-section";
@@ -15,35 +14,128 @@ import { ArrowLeft, Phone, Mail, Calendar, MapPin } from "lucide-react";
 export function LeadDetailClient({
   lead: initialLead,
   initialLogs,
+  admins,
 }: {
-  lead: Lead;
-  initialLogs: CallLog[];
+  lead: any;
+  initialLogs: any[];
+  admins: any[];
 }) {
   const [lead, setLead] = useState(initialLead);
   const [logs, setLogs] = useState(initialLogs);
 
-  const trip = TRIPS.find((t) => t.id === lead.trip_id);
+const trip = lead.trip;
+const owner = admins.find(
+  (a) => a.id === lead.ownerId
+);
+  async function handleStatusChange(
+  status: LeadStatus
+) {
+  const res = await fetch(
+    `/api/leads/${lead.id}/status`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type":
+          "application/json",
+      },
+      body: JSON.stringify({
+  status: status.toUpperCase(),
+}),
+    }
+  );
 
-  function handleStatusChange(status: LeadStatus) {
-    setLead((l) => ({ ...l, status, updated_at: new Date().toISOString() }));
+  if (res.ok) {
+    setLead((l) => ({
+      ...l,
+      status,
+    }));
   }
+}
 
-  function handleOwnerChange(ownerId: string) {
-    setLead((l) => ({ ...l, owner_id: ownerId === "unassigned" ? null : ownerId }));
+  async function handleOwnerChange(
+  ownerId: string
+) {
+  try {
+    const res = await fetch(
+      `/api/leads/${lead.id}/owner`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ownerId:
+            ownerId === "unassigned"
+              ? null
+              : ownerId,
+        }),
+      }
+    );
+
+   if (!res.ok) {
+  const errorText = await res.text();
+
+  console.log(errorText);
+
+  throw new Error(errorText);
+}
+
+    setLead((prev: any) => ({
+      ...prev,
+      ownerId:
+        ownerId === "unassigned"
+          ? null
+          : ownerId,
+    }));
+  } catch (err) {
+    console.error(err);
   }
+}
 
-  function handleAddLog(entry: { discussed: string; next_action: string }) {
-    const newLog: CallLog = {
-      id: `log_${Date.now()}`,
-      lead_id: lead.id,
-      author_id: TEAM_MEMBERS[0].id, // would be the logged-in user
-      discussed: entry.discussed,
-      next_action: entry.next_action,
-      created_at: new Date().toISOString(),
-    };
-    setLogs((prev) => [newLog, ...prev]);
+  async function handleAddLog(entry: any) {
+  try {
+    const res = await fetch(
+      `/api/leads/${lead.id}/notes`,
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+
+        body: JSON.stringify({
+          note: entry.discussed,
+
+          nextAction:
+            entry.next_action,
+
+          userId:
+            admins[0]?.id,
+        }),
+      }
+    );
+
+    if (!res.ok) {
+  const errorText = await res.text();
+
+  console.log(errorText);
+
+  throw new Error(errorText);
+}
+
+    const savedNote =
+      await res.json();
+
+    setLogs((prev) => [
+      savedNote,
+      ...prev,
+    ]);
+  } catch (error) {
+    console.error(error);
   }
-
+}
+  
   if (!trip) return null;
 
   return (
@@ -60,7 +152,7 @@ export function LeadDetailClient({
           <div>
             <h1 className="font-display font-bold text-2xl sm:text-3xl text-ink">{lead.name}</h1>
             <p className="text-sm text-ink/50 mt-1">
-              Enquired {formatRelativeTime(lead.created_at)} via {lead.source}
+              Enquired {formatRelativeTime(lead.createdAt)} via {lead.source}
             </p>
           </div>
           <LeadStatusBadge status={lead.status} />
@@ -74,14 +166,19 @@ export function LeadDetailClient({
             {/* Pipeline */}
             <div>
               <h2 className="font-display font-bold text-lg text-ink mb-3">Pipeline stage</h2>
-              <PipelineStepper currentStatus={lead.status} onChange={handleStatusChange} />
+              <PipelineStepper currentStatus={lead.status?.toLowerCase()} onChange={handleStatusChange}
+/>
             </div>
 
             {/* AI feature */}
             <WhatsAppGenerator lead={lead} trip={trip} />
 
             {/* Call logs */}
-            <CallLogSection logs={logs} teamMembers={TEAM_MEMBERS} onAddLog={handleAddLog} />
+            <CallLogSection
+  logs={logs}
+  teamMembers={admins}
+  onAddLog={handleAddLog}
+/>
           </div>
 
           {/* Sidebar */}
@@ -91,6 +188,37 @@ export function LeadDetailClient({
               <h3 className="text-xs font-semibold uppercase tracking-wider text-ink/50 mb-3">
                 Contact
               </h3>
+              <div className="border border-ink/10 rounded-sm p-5">
+  <h3 className="font-semibold mb-3">
+    Quick Actions
+  </h3>
+
+  <div className="flex flex-col gap-2">
+
+    <a
+      href={`tel:${lead.phone}`}
+      className="px-3 py-2 border rounded"
+    >
+      Call Lead
+    </a>
+
+    <a
+      href={`mailto:${lead.email}`}
+      className="px-3 py-2 border rounded"
+    >
+      Send Email
+    </a>
+
+    <a
+      href={`https://wa.me/${lead.phone}`}
+      target="_blank"
+      className="px-3 py-2 border rounded"
+    >
+      WhatsApp
+    </a>
+
+  </div>
+</div>
               <div className="space-y-2.5 text-sm">
                 <a href={`tel:${lead.phone}`} className="flex items-center gap-2.5 text-ink hover:text-rust transition-colors">
                   <Phone className="size-3.5 text-ink/40" /> {lead.phone}
@@ -106,14 +234,19 @@ export function LeadDetailClient({
               <h3 className="text-xs font-semibold uppercase tracking-wider text-ink/50 mb-3">
                 Owner
               </h3>
+              {owner && (
+  <p className="text-xs text-green-600 mt-2">
+    Assigned to {owner.name}
+  </p>
+)}
               <select
-                value={lead.owner_id ?? "unassigned"}
+                value={lead.ownerId ?? "unassigned"}
                 onChange={(e) => handleOwnerChange(e.target.value)}
                 className="w-full px-3 py-2 text-sm bg-cream border border-ink/20 rounded-sm outline-none focus:border-ink/40"
               >
                 <option value="unassigned">Unassigned</option>
-                {TEAM_MEMBERS.map((m) => (
-                  <option key={m.id} value={m.id}>{m.name}</option>
+                {admins.map((admin) => (
+                  <option key={admin.id} value={admin.id}>{admin.name}</option>
                 ))}
               </select>
             </div>
@@ -128,9 +261,14 @@ export function LeadDetailClient({
               </Link>
               <div className="space-y-2 mt-3 text-sm text-ink/70">
                 <div className="flex items-center gap-2"><MapPin className="size-3.5 text-ink/40" /> {trip.destination}</div>
-                <div className="flex items-center gap-2"><Calendar className="size-3.5 text-ink/40" /> {formatDateRange(trip.start_date, trip.end_date)}</div>
+                <div className="flex items-center gap-2">
+  <Calendar className="size-3.5 text-ink/40" />
+  {trip.startDate
+    ? new Date(trip.startDate).toLocaleDateString()
+    : "No date"}
+</div>
               </div>
-              <p className="font-display font-bold text-lg text-ink mt-3">{formatPrice(trip.price_inr)}</p>
+              <p className="font-display font-bold text-lg text-ink mt-3">{formatPrice(trip.priceGST)}</p>
             </div>
 
             {/* Enquiry details */}
@@ -141,16 +279,16 @@ export function LeadDetailClient({
               <dl className="space-y-3 text-sm">
                 <div>
                   <dt className="text-ink/50 text-xs mb-0.5">Group type</dt>
-                  <dd className="text-ink">{GROUP_TYPE_LABELS[lead.group_type]}</dd>
+                  <dd className="text-ink">{lead.groupType}</dd>
                 </div>
                 <div>
                   <dt className="text-ink/50 text-xs mb-0.5">Preferred month</dt>
-                  <dd className="text-ink">{lead.preferred_month}</dd>
+                  <dd className="text-ink">{lead.preferredMonth}</dd>
                 </div>
-                {lead.vibe_answer && (
+                {lead.tripFeeling && (
                   <div>
                     <dt className="text-ink/50 text-xs mb-0.5">Hoping this feels like</dt>
-                    <dd className="text-ink leading-relaxed">{lead.vibe_answer}</dd>
+                    <dd className="text-ink leading-relaxed">{lead.tripFeeling}</dd>
                   </div>
                 )}
               </dl>

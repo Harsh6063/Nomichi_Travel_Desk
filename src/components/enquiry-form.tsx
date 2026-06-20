@@ -63,30 +63,93 @@ export function EnquiryForm({ tripId, tripName }: EnquiryFormProps) {
     setErrors(validate(form));
   }
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    const validationErrors = validate(form);
-    setErrors(validationErrors);
-    setTouched({
-      name: true, phone: true, email: true, groupType: true, preferredMonth: true,
-    });
+  async function handleSubmit(
+  e: React.FormEvent
+) {
+  e.preventDefault();
 
-    if (Object.keys(validationErrors).length > 0) return;
+  const validationErrors =
+    validate(form);
 
-    setSubmitState("submitting");
-    try {
-      // Simulated network call — will become a Supabase insert.
-      await new Promise((resolve, reject) =>
-        setTimeout(() => {
-          if (Math.random() < 0.05) reject(new Error("network"));
-          else resolve(true);
-        }, 900)
-      );
-      setSubmitState("success");
-    } catch {
-      setSubmitState("error");
-    }
+  setErrors(validationErrors);
+
+  setTouched({
+    name: true,
+    phone: true,
+    email: true,
+    groupType: true,
+    preferredMonth: true,
+  });
+
+  if (
+    Object.keys(validationErrors)
+      .length > 0
+  ) {
+    return;
   }
+
+  try {
+    setSubmitState(
+      "submitting"
+    );
+console.log({
+  tripId,
+  groupType: form.groupType,
+});
+    const res = await fetch(
+      "/api/leads",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+
+        body: JSON.stringify({
+          name: form.name,
+
+          phone: form.phone,
+
+          email: form.email,
+
+          groupType:
+            form.groupType,
+
+          preferredMonth:
+            form.preferredMonth,
+
+          tripFeeling:
+            form.vibeAnswer,
+
+          tripId,
+        }),
+      }
+    );
+
+    const data =
+      await res.json();
+
+    if (!res.ok) {
+      throw new Error(
+        data.error ||
+          "Failed to submit"
+      );
+    }
+
+    setSubmitState(
+      "success"
+    );
+
+    setForm(initialState);
+  } catch (error) {
+    console.error(error);
+
+    setSubmitState(
+      "error"
+    );
+  }
+}
 
   if (submitState === "success") {
     return (

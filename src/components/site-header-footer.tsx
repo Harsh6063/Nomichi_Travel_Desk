@@ -16,82 +16,75 @@ export function SiteHeader() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-rust/10">
 
-      <div className="max-w-[1600px] mx-auto px-5 lg:px-10">
+  <div className="max-w-[1600px] mx-auto px-4 lg:px-10">
 
-        <div className="h-20 flex items-center justify-between">
+    <div className="h-16 lg:h-20 flex items-center justify-between">
 
-          {/* Logo */}
+      {/* Logo */}
+      <Link href="/" className="shrink-0">
+        <img
+          src="/images/logo.svg"
+          alt="Nomichi"
+          className="h-7 lg:h-8 w-auto"
+        />
+      </Link>
 
-          <Link href="/">
-  <img
-    src="images/logo.svg"
-    alt="Nomichi"
-    className="h-8 w-auto object-contain"
-  />
-</Link>
-          
+      {/* Desktop Nav */}
+      <nav className="hidden lg:flex items-center gap-10">
+        <a
+          href="/#stories"
+          className="text-ink font-medium hover:text-rust transition"
+        >
+          Stories Across India
+        </a>
 
-          {/* Desktop Navigation */}
+        <a
+          href="/#wonders"
+          className="text-ink font-medium hover:text-rust transition"
+        >
+          Lesser Known Wonders
+        </a>
+      </nav>
 
-          <nav className="hidden lg:flex items-center gap-10">
+      {/* Actions */}
+      <div className="flex items-center gap-2 lg:gap-4">
 
-            <a
-              href="#stories"
-              className="text-ink font-medium hover:text-rust transition"
-            >
-              Stories Across India
-            </a>
+        <Link
+          href="/login"
+          className="
+            text-xs lg:text-base
+            font-medium
+            text-ink
+            hover:text-rust
+            transition
+          "
+        >
+          Admin
+        </Link>
 
-
-            <a
-              href="#wonders"
-              className="text-ink font-medium hover:text-rust transition"
-            >
-              Lesser Known Wonders
-            </a>
-
-
-          </nav>
-
-          {/* Contact Button */}
-
-          <div className="flex items-center gap-4">
-
-  <Link
-    href="/login"
-    className="
-      text-ink
-      font-medium
-      hover:text-rust
-      transition
-    "
-  >
-    Admin Login
-  </Link>
-
-  <a
-    href="#contact"
-    className="
-      bg-rust
-      text-white
-      px-6
-      py-3
-      rounded-full
-      font-semibold
-      hover:scale-105
-      transition-all
-    "
-  >
-    Contact Us
-  </a>
-
-</div>
-
-        </div>
+        <a
+          href="#contact"
+          className="
+            bg-rust
+            text-white
+            px-3 lg:px-6
+            py-2 lg:py-3
+            rounded-full
+            text-xs lg:text-base
+            font-semibold
+            whitespace-nowrap
+          "
+        >
+          Contact Us
+        </a>
 
       </div>
 
-    </header>
+    </div>
+
+  </div>
+
+</header>
   );
 }
 
@@ -115,12 +108,12 @@ export function SiteFooter() {
 
             <div className="space-y-5">
 
-              <a href="#stories" className="block hover:text-rust">
+              <a href="/#stories" className="block hover:text-rust">
                 Stories Across India
               </a>
 
 
-              <a href="#wonders" className="block hover:text-rust">
+              <a href="/#wonders" className="block hover:text-rust">
                 Lesser Known Wonders
               </a>
 
@@ -226,7 +219,7 @@ export function SiteFooter() {
 
           <Link href="/">
   <img
-    src="images/logo.svg"
+    src="/images/logo.svg"
     alt="Nomichi"
     className="h-12 w-auto mx-auto mb-6"
   />

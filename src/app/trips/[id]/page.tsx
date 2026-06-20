@@ -1,131 +1,198 @@
-import { TRIPS } from "@/lib/mock-data";
-import { formatDateRange, formatPrice, seatsLeftLabel } from "@/lib/utils";
+import { prisma } from "@/lib/prisma";
 import { SiteHeader, SiteFooter } from "@/components/site-header-footer";
-import { StampBadge } from "@/components/stamp-badge";
 import { EnquiryForm } from "@/components/enquiry-form";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Calendar, MapPin, Users } from "lucide-react";
-
-const COVER_GRADIENTS: Record<string, string> = {
-  spiti: "linear-gradient(135deg, #45471D 0%, #1C1B1A 100%)",
-  kerala: "linear-gradient(135deg, #1C1B1A 0%, #45471D 60%, #D1B788 100%)",
-  ladakh: "linear-gradient(135deg, #D55D27 0%, #1C1B1A 100%)",
-  konkan: "linear-gradient(135deg, #D1B788 0%, #45471D 100%)",
-};
+import ScrollToTop from "@/components/ScrollToTop";
+import {
+ArrowLeft,
+Calendar,
+MapPin,
+Users,
+Clock3,
+} from "lucide-react";
 
 export default async function TripDetailPage({
-  params,
+params,
 }: {
-  params: Promise<{ id: string }>;
+params: Promise<{ id: string }>;
 }) {
-  const { id } = await params;
-  const trip = TRIPS.find((t) => t.id === id);
+const { id } = await params;
 
-  if (!trip) notFound();
+const trip = await prisma.trip.findUnique({
+where: {
+id,
+},
+});
 
-  const isOpen = trip.status === "open";
-  const seatsLabel = seatsLeftLabel(trip.total_seats, trip.seats_booked);
-  const isFull = seatsLabel === "Full";
-  const canEnquire = isOpen && !isFull;
-
-  return (
-    <>
-      <SiteHeader />
-      <main className="flex-1">
-        <div
-          className="h-56 sm:h-72 relative flex items-end"
-          style={{ background: COVER_GRADIENTS[trip.cover_image ?? "spiti"] }}
-        >
-          <div className="mx-auto max-w-5xl w-full px-5 sm:px-8 pb-6 sm:pb-8">
-            <Link
-              href="/"
-              className="inline-flex items-center gap-1.5 text-cream/80 text-sm mb-4 hover:text-cream transition-colors"
-            >
-              <ArrowLeft className="size-4" /> All trips
-            </Link>
-            <div className="flex items-center gap-3 mb-2">
-              <StampBadge tone={canEnquire ? "olive" : "ink"} className="bg-cream/90">
-                {isFull ? "Full" : isOpen ? "Open" : "Closed"}
-              </StampBadge>
-            </div>
-            <h1 className="font-display font-black text-3xl sm:text-5xl text-cream leading-tight">
-              {trip.name}
-            </h1>
-          </div>
-        </div>
-
-        <div className="mx-auto max-w-5xl px-5 sm:px-8 py-10 sm:py-14">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-10 lg:gap-14">
-            {/* Left: details */}
-            <div>
-              <div className="flex flex-wrap gap-x-6 gap-y-3 mb-8 pb-8 border-b border-ink/10">
-                <InfoItem icon={MapPin} label={trip.destination} />
-                <InfoItem icon={Calendar} label={formatDateRange(trip.start_date, trip.end_date)} />
-                <InfoItem icon={Users} label={seatsLabel} />
-              </div>
-
-              <h2 className="font-display font-bold text-xl text-ink mb-3">
-                About this trip
-              </h2>
-              <p className="text-ink/75 leading-relaxed whitespace-pre-line">
-                {trip.description}
-              </p>
-
-              <div className="mt-8 pt-8 border-t border-ink/10">
-                <p className="text-sm text-ink/50 mb-1">Price per person, including GST</p>
-                <p className="font-display font-black text-3xl text-ink">
-                  {formatPrice(trip.price_inr)}
-                </p>
-              </div>
-            </div>
-
-            {/* Right: enquiry form */}
-            <div>
-              <div className="bg-sand/10 border border-sand/40 rounded-sm p-5 sm:p-7 lg:sticky lg:top-24">
-                {canEnquire ? (
-                  <>
-                    <h2 className="font-display font-bold text-xl text-ink mb-1">
-                      Send an enquiry
-                    </h2>
-                    <p className="text-sm text-ink/60 mb-6">
-                      No payment now. We call you back to talk it through.
-                    </p>
-                    <EnquiryForm tripId={trip.id} tripName={trip.name} />
-                  </>
-                ) : (
-                  <div className="text-center py-4">
-                    <h2 className="font-display font-bold text-xl text-ink mb-2">
-                      {isFull ? "This batch is full" : "Not open right now"}
-                    </h2>
-                    <p className="text-sm text-ink/60 mb-5">
-                      {isFull
-                        ? "All seats for this batch are taken. Leave your details and we will reach out when the next one opens."
-                        : "This trip isn't taking enquiries at the moment. Check back, or browse what's open now."}
-                    </p>
-                    <Link
-                      href="/#trips"
-                      className="text-sm font-medium text-rust hover:underline"
-                    >
-                      See open trips
-                    </Link>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
-      <SiteFooter />
-    </>
-  );
+if (!trip) {
+notFound();
 }
 
-function InfoItem({ icon: Icon, label }: { icon: typeof MapPin; label: string }) {
-  return (
-    <div className="flex items-center gap-2 text-sm text-ink/70">
-      <Icon className="size-4 text-ink/40" />
-      <span>{label}</span>
-    </div>
-  );
+const seatsLeft =
+trip.totalSeats - trip.bookedSeats;
+
+const canEnquire =
+trip.status === "OPEN" &&
+seatsLeft > 0;
+
+return (
+
+<> <ScrollToTop /><SiteHeader />
+
+  <main>
+
+    <section
+      className="
+        relative
+        h-[75vh]
+        flex
+        items-end
+      "
+    >
+      <img
+        src={trip.image || ""}
+        alt={trip.name}
+        className="
+          absolute
+          inset-0
+          h-full
+          w-full
+          object-cover
+        "
+      />
+
+      <div className="absolute inset-0 bg-black/50" />
+
+      <div className="relative z-10 max-w-7xl mx-auto w-full px-5 pb-12 text-white">
+
+        <Link
+          href="/discover"
+          className="inline-flex items-center gap-2 mb-6"
+        >
+          <ArrowLeft size={18} />
+          Back To Trips
+        </Link>
+
+        <h1 className="font-display text-6xl font-black">
+          {trip.name}
+        </h1>
+
+        <p className="text-xl mt-3">
+          {trip.journeyType}
+        </p>
+
+      </div>
+
+    </section>
+
+    <section className="py-20">
+
+      <div className="max-w-7xl mx-auto px-5">
+
+        <div className="grid lg:grid-cols-[1.5fr_1fr] gap-14">
+
+          <div>
+
+            <div className="flex flex-wrap gap-8 border-b border-ink/10 pb-8 mb-8">
+
+              <InfoItem
+                icon={MapPin}
+                label={trip.destination}
+              />
+
+              <InfoItem
+                icon={Clock3}
+                label={trip.duration || ""}
+              />
+
+              <InfoItem
+                icon={Users}
+                label={`${seatsLeft} Seats Left`}
+              />
+
+              <InfoItem
+                icon={Calendar}
+                label={`${new Date(
+                  trip.startDate
+                ).toLocaleDateString()} - ${new Date(
+                  trip.endDate
+                ).toLocaleDateString()}`}
+              />
+
+            </div>
+
+            <h2 className="text-3xl font-bold mb-4">
+              About This Journey
+            </h2>
+
+            <p className="leading-relaxed text-ink/70">
+              {trip.description}
+            </p>
+
+            <div className="mt-10">
+
+              <p className="text-sm text-ink/50">
+                Price Including GST
+              </p>
+
+              <p className="text-rust text-5xl font-black mt-2">
+                ₹{trip.priceGST.toLocaleString()}
+              </p>
+
+            </div>
+
+          </div>
+
+          <div>
+
+            <div className="bg-white shadow-xl rounded-[32px] p-8 sticky top-24">
+
+              <h3 className="text-3xl font-bold mb-2">
+                Enquire Now
+              </h3>
+
+              <p className="text-ink/60 mb-6">
+                No payment needed right now.
+              </p>
+
+              {canEnquire ? (
+                <EnquiryForm
+                  tripId={trip.id}
+                  tripName={trip.name}
+                />
+              ) : (
+                <div>
+                  Trip currently unavailable.
+                </div>
+              )}
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <SiteFooter />
+</>
+
+
+);
+}
+
+function InfoItem({
+icon: Icon,
+label,
+}: {
+icon: any;
+label: string;
+}) {
+return ( <div className="flex items-center gap-2"> <Icon size={18} /> <span>{label}</span> </div>
+);
 }

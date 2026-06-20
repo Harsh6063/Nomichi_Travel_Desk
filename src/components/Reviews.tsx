@@ -109,36 +109,38 @@ export default function Reviews() {
 
       </div>
 
-      <div className="reviews-wrapper">
+     {/* Mobile */}
+<div className="md:hidden px-5 space-y-6">
+  {reviews.slice(0, 4).map((review, i) => (
+    <ReviewCard
+      key={i}
+      review={review}
+    />
+  ))}
+</div>
 
-        <div className="reviews-column reviews-up">
-          {[...reviews, ...reviews].map((review, i) => (
-            <ReviewCard
-              key={`left-${i}`}
-              review={review}
-            />
-          ))}
-        </div>
+{/* Desktop */}
+<div className="hidden md:grid reviews-wrapper">
 
-        <div className="reviews-column reviews-down">
-          {[...reviews, ...reviews].map((review, i) => (
-            <ReviewCard
-              key={`middle-${i}`}
-              review={review}
-            />
-          ))}
-        </div>
+  <div className="reviews-column reviews-up">
+    {[...reviews, ...reviews].map((review, i) => (
+      <ReviewCard key={`left-${i}`} review={review} />
+    ))}
+  </div>
 
-        <div className="reviews-column reviews-up">
-          {[...reviews, ...reviews].map((review, i) => (
-            <ReviewCard
-              key={`right-${i}`}
-              review={review}
-            />
-          ))}
-        </div>
+  <div className="reviews-column reviews-down">
+    {[...reviews, ...reviews].map((review, i) => (
+      <ReviewCard key={`mid-${i}`} review={review} />
+    ))}
+  </div>
 
-      </div>
+  <div className="reviews-column reviews-up">
+    {[...reviews, ...reviews].map((review, i) => (
+      <ReviewCard key={`right-${i}`} review={review} />
+    ))}
+  </div>
+
+</div>
 
     </section>
   );

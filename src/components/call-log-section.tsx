@@ -93,17 +93,17 @@ export function CallLogSection({
       ) : (
         <div className="space-y-3">
           {sortedLogs.map((log) => {
-            const author = teamMembers.find((m) => m.id === log.author_id);
+            const authorName = log.user?.name ?? "Admin";
             return (
               <div key={log.id} className="border border-ink/10 rounded-sm p-4">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-medium text-ink/60">{author?.name ?? "Unknown"}</span>
-                  <span className="text-xs text-ink/40">{formatRelativeTime(log.created_at)}</span>
+                  <span className="text-xs font-medium text-ink/60">{authorName}</span>
+                  <span className="text-xs text-ink/40">{formatRelativeTime(log.createdAt)}</span>
                 </div>
-                <p className="text-sm text-ink/80 leading-relaxed">{log.discussed}</p>
-                {log.next_action && (
+                <p className="text-sm text-ink/80 leading-relaxed">{log.note}</p>
+                {log.nextAction && (
                   <div className="mt-2 pt-2 border-t border-ink/5">
-                    <p className="text-xs text-olive font-medium">Next: {log.next_action}</p>
+                    <p className="text-xs text-olive font-medium">Next: {log.nextAction}</p>
                   </div>
                 )}
               </div>

@@ -1,7 +1,6 @@
-import { TRIPS } from "@/lib/mock-data";
-import { AdminPageHeader } from "@/components/admin-page-header";
-import { TripForm } from "@/components/trip-form";
+import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
+import { TripForm } from "@/components/trip-form";
 
 export default async function EditTripPage({
   params,
@@ -9,16 +8,27 @@ export default async function EditTripPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const trip = TRIPS.find((t) => t.id === id);
 
-  if (!trip) notFound();
+  const trip = await prisma.trip.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  if (!trip) {
+    notFound();
+  }
 
   return (
-    <>
-      <AdminPageHeader title={`Edit ${trip.name}`} description="Changes save instantly once submitted." />
-      <div className="px-5 sm:px-8 py-6 sm:py-8">
-        <TripForm mode="edit" initialTrip={trip} />
-      </div>
-    </>
+    <div className="p-8">
+      <h1 className="text-3xl font-bold mb-6">
+        Edit Trip
+      </h1>
+
+      <TripForm
+        mode="edit"
+        initialTrip={trip}
+      />
+    </div>
   );
 }

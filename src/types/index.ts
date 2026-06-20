@@ -14,12 +14,15 @@ export interface Trip {
   seats_booked: number;
   status: TripStatus;
   description: string;
-  short_description: string;
   cover_image?: string;
   created_at: string;
 }
 
-export type GroupType = "solo" | "friends" | "couple" | "family";
+export type GroupType =
+  | "SOLO"
+  | "FRIENDS"
+  | "COUPLE"
+  | "FAMILY";
 
 export type LeadStatus =
   | "new"
@@ -78,9 +81,9 @@ export const LEAD_STATUS_ORDER: LeadStatus[] = [
   "confirmed",
 ];
 
-export const GROUP_TYPE_LABELS: Record<GroupType, string> = {
-  solo: "Solo",
-  friends: "Friends",
-  couple: "Couple",
-  family: "Family",
+export const GROUP_TYPE_LABELS = {
+  SOLO: "Solo",
+  FRIENDS: "Friends",
+  COUPLE: "Couple",
+  FAMILY: "Family",
 };

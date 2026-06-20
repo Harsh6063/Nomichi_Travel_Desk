@@ -2,13 +2,27 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { LEADS, TRIPS, TEAM_MEMBERS } from "@/lib/mock-data";
-import { LEAD_STATUS_LABELS, GROUP_TYPE_LABELS, type LeadStatus } from "@/types";
+import {
+  LEAD_STATUS_LABELS,
+  GROUP_TYPE_LABELS,
+  type LeadStatus,
+} from "@/types";
+
 import { LeadStatusBadge } from "@/components/lead-status-badge";
 import { formatRelativeTime } from "@/lib/utils";
-import { Search, SlidersHorizontal, X } from "lucide-react";
+import {
+  Search,
+  SlidersHorizontal,
+  X,
+} from "lucide-react";
 
-export function LeadsListClient({ initialTripFilter }: { initialTripFilter?: string }) {
+export function LeadsListClient({
+  leads,
+  initialTripFilter,
+}: {
+  leads: any[];
+  initialTripFilter?: string;
+}) {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<LeadStatus | "all">("all");
   const [tripFilter, setTripFilter] = useState<string>(initialTripFilter ?? "all");
@@ -16,11 +30,11 @@ export function LeadsListClient({ initialTripFilter }: { initialTripFilter?: str
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   const filtered = useMemo(() => {
-    return LEADS.filter((lead) => {
+    return leads.filter((lead) => {
       if (statusFilter !== "all" && lead.status !== statusFilter) return false;
-      if (tripFilter !== "all" && lead.trip_id !== tripFilter) return false;
-      if (ownerFilter === "unassigned" && lead.owner_id !== null) return false;
-      if (ownerFilter !== "all" && ownerFilter !== "unassigned" && lead.owner_id !== ownerFilter) return false;
+      if (tripFilter !== "all" && lead.tripId !== tripFilter) return false;
+      if (ownerFilter === "unassigned" && lead.ownerId !== null) return false;
+      if (ownerFilter !== "all" && ownerFilter !== "unassigned" && lead.ownerId !== ownerFilter) return false;
       if (search.trim()) {
         const q = search.toLowerCase();
         const matches =
@@ -30,7 +44,7 @@ export function LeadsListClient({ initialTripFilter }: { initialTripFilter?: str
         if (!matches) return false;
       }
       return true;
-    }).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    }).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   }, [search, statusFilter, tripFilter, ownerFilter]);
 
   const activeFilterCount = [statusFilter !== "all", tripFilter !== "all", ownerFilter !== "all"].filter(Boolean).length;
@@ -68,7 +82,7 @@ export function LeadsListClient({ initialTripFilter }: { initialTripFilter?: str
           )}
         </button>
         <span className="text-sm text-ink/50 ml-auto hidden sm:inline">
-          {filtered.length} of {LEADS.length}
+          {filtered.length} of {leads.length}
         </span>
       </div>
 
@@ -89,7 +103,19 @@ export function LeadsListClient({ initialTripFilter }: { initialTripFilter?: str
             onChange={setTripFilter}
             options={[
               { value: "all", label: "All trips" },
-              ...TRIPS.map((t) => ({ value: t.id, label: t.name })),
+              ...Array.from(
+  new Map(
+    leads
+      .filter((l) => l.trip)
+      .map((l) => [
+        l.trip.id,
+        {
+          value: l.trip.id,
+          label: l.trip.name,
+        },
+      ])
+  ).values()
+),
             ]}
           />
           <FilterSelect
@@ -99,7 +125,19 @@ export function LeadsListClient({ initialTripFilter }: { initialTripFilter?: str
             options={[
               { value: "all", label: "All owners" },
               { value: "unassigned", label: "Unassigned" },
-              ...TEAM_MEMBERS.map((m) => ({ value: m.id, label: m.name })),
+              ...Array.from(
+  new Map(
+    leads
+      .filter((l) => l.owner)
+      .map((l) => [
+        l.owner.id,
+        {
+          value: l.owner.id,
+          label: l.owner.name,
+        },
+      ])
+  ).values()
+),
             ]}
           />
           {activeFilterCount > 0 && (
@@ -117,7 +155,7 @@ export function LeadsListClient({ initialTripFilter }: { initialTripFilter?: str
       {filtered.length === 0 ? (
         <div className="px-5 sm:px-8 py-16 text-center">
           <p className="text-ink/60">
-            {LEADS.length === 0
+            {filtered.length === 0
               ? "No enquiries yet. They will show up here the moment someone submits the form."
               : "Nothing matches that search or filter combination."}
           </p>
@@ -144,8 +182,8 @@ export function LeadsListClient({ initialTripFilter }: { initialTripFilter?: str
               </thead>
               <tbody>
                 {filtered.map((lead) => {
-                  const trip = TRIPS.find((t) => t.id === lead.trip_id);
-                  const owner = TEAM_MEMBERS.find((m) => m.id === lead.owner_id);
+                  const trip = lead.trip;
+const owner = lead.owner;
                   return (
                     <tr
                       key={lead.id}
@@ -158,7 +196,7 @@ export function LeadsListClient({ initialTripFilter }: { initialTripFilter?: str
                         </Link>
                       </td>
                       <td className="py-3.5 text-ink/70">{trip?.name ?? "—"}</td>
-                      <td className="py-3.5 text-ink/70">{GROUP_TYPE_LABELS[lead.group_type]}</td>
+                      <td className="py-3.5 text-ink/70">{GROUP_TYPE_LABELS[lead.groupType]}</td>
                       <td className="py-3.5"><LeadStatusBadge status={lead.status} /></td>
                       <td className="py-3.5">
                         {owner ? (
@@ -167,7 +205,7 @@ export function LeadsListClient({ initialTripFilter }: { initialTripFilter?: str
                           <span className="text-ink/40 italic">Unassigned</span>
                         )}
                       </td>
-                      <td className="py-3.5 text-ink/50">{formatRelativeTime(lead.created_at)}</td>
+                      <td className="py-3.5 text-ink/50">{formatRelativeTime(lead.createdAt)}</td>
                     </tr>
                   );
                 })}
@@ -178,8 +216,8 @@ export function LeadsListClient({ initialTripFilter }: { initialTripFilter?: str
           {/* Mobile cards */}
           <div className="md:hidden px-5 py-3 space-y-3">
             {filtered.map((lead) => {
-              const trip = TRIPS.find((t) => t.id === lead.trip_id);
-              const owner = TEAM_MEMBERS.find((m) => m.id === lead.owner_id);
+              const trip = lead.trip;
+              const owner = lead.owner;
               return (
                 <Link
                   key={lead.id}
@@ -196,7 +234,7 @@ export function LeadsListClient({ initialTripFilter }: { initialTripFilter?: str
                   <p className="text-sm text-ink/70 mb-1">{trip?.name ?? "—"}</p>
                   <div className="flex items-center justify-between text-xs text-ink/50 mt-2 pt-2 border-t border-ink/5">
                     <span>{owner ? owner.name : "Unassigned"}</span>
-                    <span>{formatRelativeTime(lead.created_at)}</span>
+                    <span>{formatRelativeTime(lead.createdAt)}</span>
                   </div>
                 </Link>
               );

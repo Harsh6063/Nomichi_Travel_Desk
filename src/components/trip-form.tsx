@@ -19,28 +19,57 @@ interface FormState {
   price_inr: string;
   total_seats: string;
   status: TripStatus;
-  short_description: string;
   description: string;
+  journeyType: string;
+duration: string;
+image: string;
 }
 
-function tripToForm(trip?: Trip): FormState {
+function tripToForm(trip?: any): FormState {
   if (!trip) {
     return {
-      name: "", destination: "", start_date: "", end_date: "",
-      price_inr: "", total_seats: "", status: "open",
-      short_description: "", description: "",
+      name: "",
+      destination: "",
+      start_date: "",
+      end_date: "",
+      price_inr: "",
+      total_seats: "",
+      status: "open",
+      description: "",
+      journeyType: "",
+      duration: "",
+      image: "",
     };
   }
+
   return {
-    name: trip.name,
-    destination: trip.destination,
-    start_date: trip.start_date,
-    end_date: trip.end_date,
-    price_inr: String(trip.price_inr),
-    total_seats: String(trip.total_seats),
-    status: trip.status,
-    short_description: trip.short_description,
-    description: trip.description,
+    name: trip.name ?? "",
+    destination: trip.destination ?? "",
+
+    start_date: trip.startDate
+      ? new Date(trip.startDate)
+          .toISOString()
+          .split("T")[0]
+      : "",
+
+    end_date: trip.endDate
+      ? new Date(trip.endDate)
+          .toISOString()
+          .split("T")[0]
+      : "",
+
+    price_inr: String(trip.priceGST ?? ""),
+    total_seats: String(trip.totalSeats ?? ""),
+
+    status:
+      trip.status === "OPEN"
+        ? "open"
+        : "closed",
+
+    description: trip.description ?? "",
+    journeyType: trip.journeyType ?? "",
+    duration: trip.duration ?? "",
+    image: trip.image ?? "",
   };
 }
 
@@ -66,33 +95,90 @@ export function TripForm({ initialTrip, mode }: TripFormProps) {
     }
     if (!form.price_inr || Number(form.price_inr) <= 0) next.price_inr = "Enter a valid price.";
     if (!form.total_seats || Number(form.total_seats) <= 0) next.total_seats = "Enter total seats.";
-    if (!form.short_description.trim()) next.short_description = "Add a one-line description.";
     if (!form.description.trim()) next.description = "Add a full description.";
     return next;
   }
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    const validationErrors = validate();
-    setErrors(validationErrors);
-    if (Object.keys(validationErrors).length > 0) return;
+ async function handleSubmit(
+  e: React.FormEvent
+) {
+  e.preventDefault();
 
+  const validationErrors = validate();
+
+  setErrors(validationErrors);
+
+  if (
+    Object.keys(validationErrors)
+      .length > 0
+  ) {
+    return;
+  }
+
+  try {
     setSaving(true);
     setSaveError("");
-    try {
-      // Simulated save — will become a Supabase insert/update.
-      await new Promise((resolve, reject) =>
-        setTimeout(() => {
-          if (Math.random() < 0.05) reject(new Error("network"));
-          else resolve(true);
-        }, 700)
+
+    const res = await fetch(
+      "/api/trips",
+      {
+        method:
+          mode === "create"
+            ? "POST"
+            : "PUT",
+
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+
+        body: JSON.stringify({
+  id: initialTrip?.id,
+
+  name: form.name,
+  destination: form.destination,
+
+  startDate: form.start_date,
+  endDate: form.end_date,
+
+  priceGST: Number(form.price_inr),
+  totalSeats: Number(form.total_seats),
+
+  journeyType: form.journeyType,
+  duration: form.duration,
+  image: form.image,
+
+  status: form.status.toUpperCase(),
+
+  description: form.description,
+}),
+      }
+    );
+
+    const data =
+      await res.json();
+
+    if (!res.ok) {
+      throw new Error(
+        data.error ||
+          "Failed to save trip"
       );
-      router.push("/admin/trips");
-    } catch {
-      setSaveError("Couldn't save this trip. Check your connection and try again.");
-      setSaving(false);
     }
+
+    router.push(
+      "/admin/trips"
+    );
+
+    router.refresh();
+  } catch (error: any) {
+    setSaveError(
+      error.message ||
+        "Couldn't save trip."
+    );
+  } finally {
+    setSaving(false);
   }
+}
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5 max-w-2xl" noValidate>
@@ -165,7 +251,50 @@ export function TripForm({ initialTrip, mode }: TripFormProps) {
           />
         </Field>
       </div>
+<Field label="Journey Type">
+  <input
+    type="text"
+    value={form.journeyType}
+    onChange={(e) =>
+      handleChange(
+        "journeyType",
+        e.target.value
+      )
+    }
+    placeholder="Slow Travel"
+    className={inputClass(false)}
+  />
+</Field>
 
+<Field label="Duration">
+  <input
+    type="text"
+    value={form.duration}
+    onChange={(e) =>
+      handleChange(
+        "duration",
+        e.target.value
+      )
+    }
+    placeholder="3D / 2N"
+    className={inputClass(false)}
+  />
+</Field>
+
+<Field label="Image URL">
+  <input
+    type="text"
+    value={form.image}
+    onChange={(e) =>
+      handleChange(
+        "image",
+        e.target.value
+      )
+    }
+    placeholder="/images/stories/shoja.jpg"
+    className={inputClass(false)}
+  />
+</Field>
       <Field label="Status">
         <div className="flex gap-2">
           {(["open", "closed"] as TripStatus[]).map((status) => (
@@ -186,18 +315,6 @@ export function TripForm({ initialTrip, mode }: TripFormProps) {
         <p className="text-xs text-ink/50 mt-1.5">
           Open trips appear on the public site. Closed trips are hidden from travellers.
         </p>
-      </Field>
-
-      <Field label="Short description" error={errors.short_description}>
-        <input
-          type="text"
-          value={form.short_description}
-          onChange={(e) => handleChange("short_description", e.target.value)}
-          placeholder="One line, shown on the trip card"
-          maxLength={80}
-          className={inputClass(!!errors.short_description)}
-        />
-        <p className="text-xs text-ink/40 mt-1">{form.short_description.length}/80</p>
       </Field>
 
       <Field label="Full description" error={errors.description}>

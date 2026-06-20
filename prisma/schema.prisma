@@ -1,0 +1,125 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  VIBE_CHECK_SENT
+  CONFIRMED
+  NOT_A_FIT
+}
+
+enum TripStatus {
+  OPEN
+  CLOSED
+}
+
+enum GroupType {
+  SOLO
+  FRIENDS
+  COUPLE
+  FAMILY
+}
+
+enum UserRole {
+  ADMIN
+  MEMBER
+}
+
+model User {
+  id           String @id @default(uuid())
+  name         String
+  email        String @unique
+  passwordHash String
+
+  role UserRole @default(MEMBER)
+
+  leads Lead[]
+
+  notes LeadNote[]
+
+  createdAt DateTime @default(now())
+}
+
+model Trip {
+  id String @id @default(cuid())
+
+  name String
+
+  destination String
+
+  image String?
+
+  duration String?
+
+  journeyType String?
+
+  startDate DateTime
+  endDate   DateTime
+
+  priceGST Float
+
+  totalSeats  Int
+  bookedSeats Int @default(0)
+
+  status TripStatus
+
+  description String
+
+  leads Lead[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Lead {
+  id String @id @default(uuid())
+
+  name String
+
+  phone String
+
+  email String
+
+  groupType GroupType
+
+  preferredMonth String
+
+  tripFeeling String
+
+  status LeadStatus @default(NEW)
+
+  tripId String
+  trip   Trip   @relation(fields: [tripId], references: [id])
+
+  ownerId String?
+  owner   User?   @relation(fields: [ownerId], references: [id])
+
+  notes LeadNote[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model LeadNote {
+  id String @id @default(uuid())
+
+  note String
+
+  nextAction String?
+
+  leadId String
+  lead   Lead   @relation(fields: [leadId], references: [id])
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+}
