@@ -1,16 +1,17 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-export async function GET() {
-  const leads = await prisma.lead.findMany({
-    include: {
-      trip: true,
-      owner: true,
-    },
-    orderBy: {
-      createdAt: "desc",
+export async function GET(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+
+  const lead = await prisma.lead.findUnique({
+    where: {
+      id,
     },
   });
 
-  return NextResponse.json(leads);
+  return Response.json(lead);
 }
