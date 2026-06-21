@@ -30,7 +30,7 @@ export default async function DiscoverPage() {
 
         <div className="grid lg:grid-cols-3 gap-8 mt-16">
 
-          {trips.map((trip) => (
+          {trips.map((trip:any) => (
             <Link
               key={trip.id}
               href={`/trips/${trip.id}`}
@@ -48,7 +48,7 @@ export default async function DiscoverPage() {
                   <div className="flex justify-between">
 
                     <span className="text-rust text-sm">
-                      {trip.duration}Fstsus
+                      {trip.duration} Days
                     </span>
 
                     <span className="text-ink/50 text-sm">
