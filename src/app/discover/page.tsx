@@ -38,17 +38,17 @@ export default async function DiscoverPage() {
               <div className="rounded-[30px] overflow-hidden bg-white shadow-lg hover:-translate-y-2 transition">
 
                 <img
-                  src={trip.image}
-                  alt={trip.name}
-                  className="h-[350px] w-full object-cover"
-                />
+  src={trip.image || "/images/placeholder.jpg"}
+  alt={trip.name}
+  className="h-[350px] w-full object-cover"
+/>
 
                 <div className="p-6">
 
                   <div className="flex justify-between">
 
                     <span className="text-rust text-sm">
-                      {trip.duration}
+                      {trip.duration}Fstsus
                     </span>
 
                     <span className="text-ink/50 text-sm">

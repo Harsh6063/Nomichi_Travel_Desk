@@ -196,7 +196,7 @@ const owner = lead.owner;
                         </Link>
                       </td>
                       <td className="py-3.5 text-ink/70">{trip?.name ?? "—"}</td>
-                      <td className="py-3.5 text-ink/70">{GROUP_TYPE_LABELS[lead.groupType]}</td>
+                      <td className="py-3.5 text-ink/70">{GROUP_TYPE_LABELS[lead.groupType as keyof typeof GROUP_TYPE_LABELS]}</td>
                       <td className="py-3.5"><LeadStatusBadge status={lead.status} /></td>
                       <td className="py-3.5">
                         {owner ? (

@@ -26,9 +26,28 @@ export default async function EditTripPage({
       </h1>
 
       <TripForm
-        mode="edit"
-        initialTrip={trip}
-      />
+  mode="edit"
+  initialTrip={{
+    id: trip.id,
+    name: trip.name,
+    destination: trip.destination,
+
+    startDate: trip.startDate,
+    endDate: trip.endDate,
+
+    priceGST: trip.priceGST,
+
+    totalSeats: trip.totalSeats,
+
+    status: trip.status,
+
+    description: trip.description,
+
+    image: trip.image ?? undefined,
+
+    createdAt: trip.createdAt,
+  }}
+/>
     </div>
   );
 }

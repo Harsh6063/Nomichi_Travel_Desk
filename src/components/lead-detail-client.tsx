@@ -45,7 +45,7 @@ const owner = admins.find(
   );
 
   if (res.ok) {
-    setLead((l) => ({
+    setLead((l:any) => ({
       ...l,
       status,
     }));

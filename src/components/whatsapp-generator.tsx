@@ -20,9 +20,9 @@ export function WhatsAppGenerator({ lead, trip }: { lead: Lead; trip: Trip }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           leadName: lead.name,
-          groupType: lead.groupType,
-preferredMonth: lead.preferredMonth,
-vibeAnswer: lead.tripFeeling,
+          groupType: lead.group_type,
+preferredMonth: lead.preferred_month,
+vibeAnswer: lead.vibe_answer,
 tripName: trip.name,
 destination: trip.destination,
 priceInr: trip.priceGST,

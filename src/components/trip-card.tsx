@@ -12,8 +12,8 @@ const COVER_GRADIENTS: Record<string, string> = {
 };
 
 export function TripCard({ trip }: { trip: Trip }) {
-  const isOpen = trip.status === "open";
-  const seatsLabel = seatsLeftLabel(trip.total_seats, trip.seats_booked);
+  const isOpen = trip.status === "OPEN";
+  const seatsLabel = seatsLeftLabel(trip.totalSeats, 0);
   const isFull = seatsLabel === "Full";
 
   return (
@@ -23,7 +23,7 @@ export function TripCard({ trip }: { trip: Trip }) {
     >
       <div
         className="h-40 sm:h-48 relative flex items-end p-4"
-        style={{ background: COVER_GRADIENTS[trip.cover_image ?? "spiti"] }}
+        style={{ background: COVER_GRADIENTS[trip.image ?? "spiti"] }}
       >
         <div className="absolute top-3 right-3">
           <StampBadge tone={isOpen && !isFull ? "olive" : "ink"} className="bg-cream/90">
@@ -40,13 +40,16 @@ export function TripCard({ trip }: { trip: Trip }) {
           <span>{trip.destination}</span>
         </div>
         <p className="text-sm text-ink/75 leading-relaxed mb-3">
-          {trip.short_description}
+          {trip.description}
         </p>
         <div className="flex items-center justify-between pt-3 border-t border-ink/10">
           <div>
-            <p className="text-xs text-ink/50">{formatDateRange(trip.start_date, trip.end_date)}</p>
+            <p className="text-xs text-ink/50">{formatDateRange(
+  trip.startDate.toISOString(),
+  trip.endDate.toISOString()
+)}</p>
             <p className="font-display font-bold text-lg text-ink mt-0.5">
-              {formatPrice(trip.price_inr)}
+              {formatPrice(trip.priceGST)}
               <span className="text-xs font-sans font-normal text-ink/50"> incl. GST</span>
             </p>
           </div>

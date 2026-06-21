@@ -7,15 +7,20 @@ export interface Trip {
   id: string;
   name: string;
   destination: string;
-  start_date: string; // ISO date
-  end_date: string; // ISO date
-  price_inr: number; // price including GST, in INR
-  total_seats: number;
-  seats_booked: number;
-  status: TripStatus;
+
+  startDate: Date;
+  endDate: Date;
+
+  priceGST: number;
+  totalSeats: number;
+
+  status: "OPEN" | "CLOSED";
+
   description: string;
-  cover_image?: string;
-  created_at: string;
+
+  image?: string | null;
+
+  createdAt: Date;
 }
 
 export type GroupType =
@@ -50,11 +55,16 @@ export interface Lead {
 
 export interface CallLog {
   id: string;
-  lead_id: string;
-  author_id: string;
-  discussed: string;
-  next_action: string;
-  created_at: string;
+  leadId: string;
+  note: string;
+  nextAction?: string | null;
+  createdAt: string;
+
+  user?: {
+    id: string;
+    name: string;
+    email?: string;
+  } | null;
 }
 
 export interface TeamMember {

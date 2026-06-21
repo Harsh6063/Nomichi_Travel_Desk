@@ -1,4 +1,9 @@
-import { SiteHeader, SiteFooter } from "@/components/site-header-footer";
+import { prisma } from "@/lib/prisma";
+
+import {
+  SiteHeader,
+  SiteFooter,
+} from "@/components/site-header-footer";
 
 import HeroSection from "@/components/HeroSection";
 import WhyTravel from "@/components/WhyTravel";
@@ -8,26 +13,31 @@ import UnfilteredFrames from "@/components/UnfilteredFrames";
 import Reviews from "@/components/Reviews";
 import CTASection from "@/components/CTASection";
 
-
-import { TRIPS } from "@/lib/mock-data";
 import { TripCard } from "@/components/trip-card";
 
-export default function HomePage() {
-  const openTrips = TRIPS.filter(
-    (trip) => trip.status === "open"
-  );
+export default async function HomePage() {
+  const openTrips = await prisma.trip.findMany({
+    where: {
+      status: "OPEN",
+    },
+    orderBy: {
+      startDate: "asc",
+    },
+  });
 
   return (
     <>
       <SiteHeader />
 
       <main>
-
         <HeroSection />
 
         <WhyTravel />
 
         <StoriesAcrossIndia />
+
+       
+          
 
         <LesserKnownWonders />
 
@@ -36,7 +46,6 @@ export default function HomePage() {
         <Reviews />
 
         <CTASection />
-
       </main>
 
       <SiteFooter />
