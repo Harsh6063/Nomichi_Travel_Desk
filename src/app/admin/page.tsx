@@ -33,16 +33,16 @@ export default async function AdminDashboardPage() {
   const totalLeads = leads.length;
 
   const unassignedLeads = leads.filter(
-    (lead) => !lead.ownerId
+    (lead: any) => !lead.ownerId
   ).length;
 
   const confirmedLeads = leads.filter(
-    (lead) =>
+    (lead: any) =>
       lead.status === "CONFIRMED"
   ).length;
 
   const openTrips = trips.filter(
-    (trip) =>
+    (trip: any) =>
       trip.status === "OPEN"
   ).length;
 
