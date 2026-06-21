@@ -55,9 +55,12 @@ export default async function AdminDashboardPage() {
     NOT_A_FIT: 0,
   };
 
-  leads.forEach((lead) => {
-    byStage[lead.status]++;
-  });
+  leads.forEach((lead: any) => {
+  const status =
+    lead.status as keyof typeof byStage;
+
+  byStage[status]++;
+});
 
   const maxStageCount = Math.max(
     ...Object.values(byStage),
@@ -68,7 +71,7 @@ export default async function AdminDashboardPage() {
     .map((trip) => ({
       trip,
       count: leads.filter(
-        (lead) =>
+        (lead: any) =>
           lead.tripId === trip.id
       ).length,
     }))
@@ -242,7 +245,7 @@ export default async function AdminDashboardPage() {
             {admins.map((admin) => {
               const count =
                 leads.filter(
-                  (lead) =>
+                  (lead: any ) =>
                     lead.ownerId ===
                     admin.id
                 ).length;
