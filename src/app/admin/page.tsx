@@ -68,7 +68,7 @@ export default async function AdminDashboardPage() {
   );
 
   const leadsPerTrip = trips
-    .map((trip) => ({
+    .map((trip: any) => ({
       trip,
       count: leads.filter(
         (lead: any) =>
