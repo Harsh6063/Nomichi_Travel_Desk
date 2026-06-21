@@ -75,18 +75,19 @@ export default async function AdminDashboardPage() {
           lead.tripId === trip.id
       ).length,
     }))
-    .sort((a, b) => b.count - a.count);
+    .sort(
+  (
+    a: { trip: any; count: number },
+    b: { trip: any; count: number }
+  ) => b.count - a.count
+);
 
   const recentLeads = [...leads]
-    .sort(
-      (a, b) =>
-        new Date(
-          b.createdAt
-        ).getTime() -
-        new Date(
-          a.createdAt
-        ).getTime()
-    )
+  .sort(
+    (a: any, b: any) =>
+      new Date(b.createdAt).getTime() -
+      new Date(a.createdAt).getTime()
+  )
     .slice(0, 5);
 
   return (
@@ -185,7 +186,7 @@ export default async function AdminDashboardPage() {
             <div className="space-y-3">
 
               {leadsPerTrip.map(
-                ({ trip, count }) => (
+                ({ trip, count }: { trip: any; count: number }) => (
                   <Link
                     key={trip.id}
                     href={`/admin/leads?trip=${trip.id}`}
@@ -242,7 +243,7 @@ export default async function AdminDashboardPage() {
 
           <div className="grid md:grid-cols-3 gap-4">
 
-            {admins.map((admin) => {
+            {admins.map((admin: any) => {
               const count =
                 leads.filter(
                   (lead: any ) =>
@@ -281,7 +282,7 @@ export default async function AdminDashboardPage() {
           <div className="space-y-3">
 
             {recentLeads.map(
-              (lead) => (
+              (lead: any) => (
                 <Link
                   key={lead.id}
                   href={`/admin/leads/${lead.id}`}
