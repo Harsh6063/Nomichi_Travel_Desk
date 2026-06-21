@@ -37,7 +37,7 @@ return (
 
     <div className="md:hidden space-y-4">
 
-      {trips.map((trip) => (
+      {trips.map((trip: any) => (
 
         <div
           key={trip.id}
@@ -177,7 +177,7 @@ return (
 
           <tbody>
 
-            {trips.map((trip) => (
+            {trips.map((trip: any) => (
 
               <tr
                 key={trip.id}
