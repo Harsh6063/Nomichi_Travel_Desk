@@ -97,7 +97,7 @@ console.log({
   groupType: form.groupType,
 });
     const res = await fetch(
-      "/api/leads",
+      "/api/leads/[id]",
       {
         method: "POST",
 
