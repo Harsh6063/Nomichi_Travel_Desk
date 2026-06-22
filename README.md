@@ -235,42 +235,164 @@ Fields:
 
 ---
 
-# Tech Stack
+## Deployment & Project Links
 
-## Frontend
+### Live Demo
 
-* Next.js 15
-* React 19
-* TypeScript
-* Tailwind CSS
-* Lucide React
+**Vercel Deployment:**
+[Add Your Vercel URL Here]
+
+### Demo Video
+
+**Project Walkthrough Video:**
+[Add Google Drive / Loom Video Link Here]
+
+### Source Code
+
+**GitHub Repository:**
+[Add GitHub Repository Link Here]
 
 ---
 
-## Backend
+## Tech Stack
 
-* Next.js Route Handlers
+### Frontend
+
+* Next.js 15 (App Router)
+* TypeScript
+* Tailwind CSS
+* React
+* Lucide React Icons
+
+### Backend
+
+* Next.js API Routes
 * Prisma ORM
+* JWT Authentication
+* bcrypt Password Hashing
+
+### Database
+
 * PostgreSQL
+* Neon Serverless Database
+
+### Deployment
+
+* Vercel (Application Hosting)
+* Neon (Managed PostgreSQL Database)
+
+---
+
+## Features Implemented
+
+### Public Website
+
+* Hero Section
+* Stories Across India
+* Lesser Known Wonders
+* Unfiltered Frames Gallery
+* Reviews Section
+* Trip Discovery Pages
+* Trip Detail Pages
+* Lead Enquiry Form
+* Mobile Responsive Design
+
+### Admin Dashboard
+
+* Secure Admin Login
+* Dashboard Analytics
+* Lead Management
+* Lead Detail View
+* Lead Pipeline Management
+* Lead Owner Assignment
+* Lead Notes & Follow-ups
+* WhatsApp Message Generator
+* Trip Management
+* Create Trip
+* Edit Trip
+* Open/Close Trip Status
+* Team Load Tracking
+* Recent Leads Monitoring
+
+### CRM Features
+
+* Lead Status Tracking
+
+  * NEW
+  * CONTACTED
+  * QUALIFIED
+  * VIBE_CHECK_SENT
+  * CONFIRMED
+  * NOT_A_FIT
+
+* Owner Assignment
+
+* Notes System
+
+* Lead History Tracking
 
 ---
 
 ## Authentication
 
-* JWT
-* Cookies
-* Middleware Protection
+Admin authentication is implemented using:
+
+* JWT Tokens
+* Secure HTTP Cookies
+* Password Hashing using bcrypt
+* Role-Based Access Control (ADMIN)
+
+### Default Admin Credentials
+
+Email: [Add Admin Email]
+
+Password: [Add Admin Password]
 
 ---
 
-## Deployment
+## Database
 
-Recommended:
+The application uses Neon PostgreSQL as the production database.
 
-* Vercel
-* Neon PostgreSQL
+Features:
+
+* Cloud Hosted PostgreSQL
+* Prisma ORM Integration
+* Persistent Storage
+* Production Ready Deployment
 
 ---
+
+
+---
+
+## Deployment Architecture
+
+User
+↓
+Next.js Frontend (Vercel)
+↓
+API Routes
+↓
+Prisma ORM
+↓
+Neon PostgreSQL Database
+
+---
+
+
+```
+
+---
+
+## Additional Notes
+
+* Fully deployed on Vercel
+* Uses Neon PostgreSQL for production data storage
+* Responsive across desktop, tablet, and mobile devices
+* Admin CRM updates reflect in real-time through Prisma and Neon integration
+* Production-ready architecture with scalable database design
+
 
 # Project Structure
 
