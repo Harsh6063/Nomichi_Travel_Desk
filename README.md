@@ -240,17 +240,17 @@ Fields:
 ### Live Demo
 
 **Vercel Deployment:**
-[Add Your Vercel URL Here]
+https://nomichi-travel-desk-9i597ua6m-harsh6063s-projects.vercel.app/
 
 ### Demo Video
 
 **Project Walkthrough Video:**
-[Add Google Drive / Loom Video Link Here]
+https://drive.google.com/file/d/100d95csh38FPT-uiBMlRaGrku47xK5Cm/view?usp=sharing
 
 ### Source Code
 
 **GitHub Repository:**
-[Add GitHub Repository Link Here]
+https://github.com/Harsh6063/Nomichi_Travel_Desk
 
 ---
 
@@ -471,7 +471,7 @@ NEXT_PUBLIC_APP_URL=
 Clone Repository
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/Harsh6063/Nomichi_Travel_Desk
 ```
 
 Install Dependencies
