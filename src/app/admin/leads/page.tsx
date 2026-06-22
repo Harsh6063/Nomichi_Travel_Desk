@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { AdminPageHeader } from "@/components/admin-page-header";
 import { LeadsListClient } from "@/components/leads-list-client";
 export const dynamic = "force-dynamic";
+
 export default async function LeadsPage({
   searchParams,
 }: {

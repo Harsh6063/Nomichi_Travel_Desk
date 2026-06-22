@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { TripForm } from "@/components/trip-form";
 import { notFound } from "next/navigation";
-
+export const dynamic = "force-dynamic";
 export default async function EditTripPage({
   params,
 }: {

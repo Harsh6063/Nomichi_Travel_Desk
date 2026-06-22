@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { SiteHeader, SiteFooter }
 from "@/components/site-header-footer";
+export const dynamic = "force-dynamic";
 
 export default async function DiscoverPage() {
   const trips = await prisma.trip.findMany({
