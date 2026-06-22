@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { AdminPageHeader } from "@/components/admin-page-header";
 import { StampBadge } from "@/components/stamp-badge";
 import Link from "next/link";
-
+export const dynamic = "force-dynamic";
 const STATUS_LABELS = {
   NEW: "New",
   CONTACTED: "Contacted",

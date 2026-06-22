@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { AdminPageHeader } from "@/components/admin-page-header";
-
+export const dynamic = "force-dynamic";
 export default async function TripsPage() {
 const trips = await prisma.trip.findMany({
 orderBy: {
