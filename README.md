@@ -4,6 +4,25 @@ A custom-built admin dashboard for **Nomichi**, designed to manage trips, leads,
 
 ---
 
+
+## Deployment & Project Links
+
+### Live Demo
+
+**Vercel Deployment:**
+https://nomichi-travel-desk.vercel.app?_vercel_share=Y9d8wlgyL9NEm5yoYSLYqjcmExRcJy8A
+
+### Demo Video
+
+**Project Walkthrough Video:**
+https://drive.google.com/file/d/100d95csh38FPT-uiBMlRaGrku47xK5Cm/view?usp=sharing
+
+### Source Code
+
+**GitHub Repository:**
+https://github.com/Harsh6063/Nomichi_Travel_Desk
+
+---
 # Features
 
 ## Dashboard
@@ -235,24 +254,6 @@ Fields:
 
 ---
 
-## Deployment & Project Links
-
-### Live Demo
-
-**Vercel Deployment:**
-https://nomichi-travel-desk-9i597ua6m-harsh6063s-projects.vercel.app/
-
-### Demo Video
-
-**Project Walkthrough Video:**
-https://drive.google.com/file/d/100d95csh38FPT-uiBMlRaGrku47xK5Cm/view?usp=sharing
-
-### Source Code
-
-**GitHub Repository:**
-https://github.com/Harsh6063/Nomichi_Travel_Desk
-
----
 
 ## Tech Stack
 
