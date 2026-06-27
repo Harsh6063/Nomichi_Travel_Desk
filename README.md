@@ -382,7 +382,7 @@ Neon PostgreSQL Database
 ---
 
 
-```
+
 
 ---
 
@@ -394,7 +394,7 @@ Neon PostgreSQL Database
 * Admin CRM updates reflect in real-time through Prisma and Neon integration
 * Production-ready architecture with scalable database design
 
-
+```
 # Project Structure
 
 src/
@@ -436,7 +436,7 @@ src/
 │
 
 └── types/
-
+```
 ---
 
 # Admin Credentials
@@ -462,6 +462,8 @@ Create a .env file.
 DATABASE_URL=
 
 JWT_SECRET=
+
+GROQ_API_KEY=
 
 NEXT_PUBLIC_APP_URL=
 
