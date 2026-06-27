@@ -31,9 +31,9 @@ export function WhatsAppGenerator({ lead, trip }: { lead: Lead; trip: Trip }) {
           email: lead.email,
           phone: lead.phone,
 
-          groupType: lead.groupType,
-          preferredMonth: lead.preferredMonth,
-          vibeAnswer: lead.tripFeeling,
+          groupType: lead.group_type,
+          preferredMonth: lead.preferred_month,
+          vibeAnswer: lead.trip_feeling,
 
           leadStatus: lead.status,
 
