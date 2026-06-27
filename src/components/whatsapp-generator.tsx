@@ -33,18 +33,16 @@ export function WhatsAppGenerator({ lead, trip }: { lead: Lead; trip: Trip }) {
 
           groupType: lead.group_type,
           preferredMonth: lead.preferred_month,
-          vibeAnswer: lead.trip_feeling,
+          
 
           leadStatus: lead.status,
 
           tripName: trip.name,
           destination: trip.destination,
-          duration: trip.duration,
-          journeyType: trip.journeyType,
           priceInr: trip.priceGST,
 
           adminName:
-            lead.ownerID ?? "Nomichi Team",
+            lead.id ?? "Nomichi Team",
         }),
       }
     );
