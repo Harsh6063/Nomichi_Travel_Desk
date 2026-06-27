@@ -16,7 +16,7 @@ import CTASection from "@/components/CTASection";
 import { TripCard } from "@/components/trip-card";
 
 export default async function HomePage() {
-  const openTrips = await prisma.Trip.findMany({
+  const openTrips = await prisma.trip.findMany({
     where: {
       status: "OPEN",
     },
