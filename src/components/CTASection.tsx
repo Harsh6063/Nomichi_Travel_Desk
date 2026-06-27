@@ -17,19 +17,26 @@ export default function CTASection() {
           We'll point you towards the right trip.
         </p>
 
-        <button
-          className="
-            mt-10
-            bg-white
-            text-rust
-            px-8
-            py-4
-            rounded-full
-            font-semibold
-          "
-        >
-          Start A Conversation
-        </button>
+        <a
+  href="#contact"
+  className="
+    inline-flex
+    items-center
+    justify-center
+    mt-10
+    bg-white
+    text-rust
+    px-8
+    py-4
+    rounded-full
+    font-semibold
+    hover:bg-rust
+    hover:text-white
+    transition-all
+  "
+>
+  Start A Conversation
+</a>
 
       </div>
 

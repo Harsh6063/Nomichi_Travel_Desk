@@ -54,7 +54,7 @@ export function AdminNav() {
           className="h-20 flex items-center justify-center border-b border-ink/10 px-4"
         >
           <Image
-            src="images/logo.svg"
+            src="/images/logo.svg"
             alt="Nomichi"
             width={120}
             height={30}

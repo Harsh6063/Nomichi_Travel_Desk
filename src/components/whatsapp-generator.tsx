@@ -12,31 +12,67 @@ export function WhatsAppGenerator({ lead, trip }: { lead: Lead; trip: Trip }) {
   const [error, setError] = useState("");
 
   async function generate() {
-    setLoading(true);
-    setError("");
-    try {
-      const res = await fetch("/api/ai/whatsapp-message", {
+  setLoading(true);
+  setError("");
+
+  try {
+    const res = await fetch(
+      "/api/ai/whatsapp-message",
+      
+      {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+
         body: JSON.stringify({
           leadName: lead.name,
-          groupType: lead.group_type,
-preferredMonth: lead.preferred_month,
-vibeAnswer: lead.vibe_answer,
-tripName: trip.name,
-destination: trip.destination,
-priceInr: trip.priceGST,
+          email: lead.email,
+          phone: lead.phone,
+
+          groupType: lead.groupType,
+          preferredMonth: lead.preferredMonth,
+          vibeAnswer: lead.tripFeeling,
+
+          leadStatus: lead.status,
+
+          tripName: trip.name,
+          destination: trip.destination,
+          duration: trip.duration,
+          journeyType: trip.journeyType,
+          priceInr: trip.priceGST,
+
+          adminName:
+            lead.ownerID ?? "Nomichi Team",
         }),
-      });
-      if (!res.ok) throw new Error("Request failed");
-      const data = await res.json();
-      setMessage(data.message);
-    } catch {
-      setError("Couldn't generate a message right now. Try again in a moment.");
-    } finally {
-      setLoading(false);
-    }
+      }
+    );
+
+    const text = await res.text();
+
+if (!res.ok) {
+  console.error("API Response:", text);
+  throw new Error(text);
+}
+
+const data = JSON.parse(text);
+
+setMessage(data.message);
+
+    
+  } catch (err) {
+    console.error(err);
+
+    setError(
+      err instanceof Error
+        ? err.message
+        : "Couldn't generate a WhatsApp message. Please try again."
+    );
+  } finally {
+    setLoading(false);
   }
+}
 
   function copyToClipboard() {
     if (!message) return;

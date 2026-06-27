@@ -63,7 +63,7 @@ export function SiteHeader() {
         </Link>
 
         <a
-          href="#contact"
+          href="/#contact"
           className="
             bg-rust
             text-white
@@ -148,7 +148,7 @@ export function SiteFooter() {
             </div>
 
             <a
-              href="#contact"
+              href="/#contact"
               className="
                 inline-block
                 mt-8

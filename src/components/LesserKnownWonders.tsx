@@ -1,5 +1,5 @@
 "use client";
-
+import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
 import {
   Navigation,
@@ -149,12 +149,13 @@ export default function LesserKnownWonders() {
           </Swiper>
 
           <div className="text-center mt-12">
-
-            <button className="wonder-btn">
-              Discover More
-            </button>
-
-          </div>
+  <Link
+    href="/discover"
+    className="wonder-btn inline-flex items-center justify-center"
+  >
+    Discover More
+  </Link>
+</div>
 
         </div>
 
